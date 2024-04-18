@@ -41,14 +41,15 @@ fn patch_or_err(serde_with: TokenStream2, input: TokenStream2) -> syn::Result<To
         return Ok(input);
     };
     for field in input.fields.iter_mut() {
-        if has_attr(&field.attrs, "serde", "with") {
-            continue;
-        }
-
-        if has_attr(&field.attrs, "prost", "bytes") {
+        if !has_attr(&field.attrs, "serde", "with") && has_attr(&field.attrs, "prost", "bytes") {
             field
                 .attrs
                 .push(syn::parse_quote!(#[serde(with = #serde_with)]));
+        }
+        if !has_attr(&field.attrs, "serde", "default") && has_attr(&field.attrs, "prost", "repeated") {
+            field
+                .attrs
+                .push(syn::parse_quote!(#[serde(default)]));
         }
     }
 
