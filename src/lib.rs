@@ -1,3 +1,5 @@
+#![doc = include_str!("../README.md")]
+
 extern crate proc_macro;
 
 use syn::{parse_macro_input, punctuated::Punctuated, ItemStruct, Meta, Token};
